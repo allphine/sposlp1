@@ -237,3 +237,28 @@ for line in file:
 
 file.close()
 ifp.close()
+
+
+# Priority Scheduling (Non-Preemptive) with Different Arrival Times
+
+proc = [[1, 3, 3, 1], [2, 5, 4, 2], [3, 1, 1, 3], [4, 7, 7, 4], [5, 4, 8, 5]]
+proc.sort(key=lambda x: (x[0], x[2]))  # Sort by arrival, then priority
+n = len(proc)
+
+def priority_scheduling(p):
+    wt, tat, st, ct = [0]*n, [0]*n, [0]*n, [0]*n
+    for i in range(1, n):
+        st[i] = max(p[i][0], st[i-1] + p[i-1][1])
+        wt[i] = max(0, st[i] - p[i][0])
+    for i in range(n):
+        ct[i] = st[i] + p[i][1]
+        tat[i] = p[i][1] + wt[i]
+
+    print("P\tAT\tBT\tPR\tST\tCT\tTAT\tWT")
+    for i in range(n):
+        print(f"P{p[i][3]}\t{p[i][0]}\t{p[i][1]}\t{p[i][2]}\t{st[i]}\t{ct[i]}\t{tat[i]}\t{wt[i]}")
+
+    print("\nAvg WT = {:.2f}".format(sum(wt)/n))
+    print("Avg TAT = {:.2f}".format(sum(tat)/n))
+
+priority_scheduling(proc)
